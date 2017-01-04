@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Player {
+public class Player implements Serializable{
 	
 	public String playerName;
 	public double amtMoney;
@@ -22,6 +23,11 @@ public class Player {
 		location[1] = yCoord;
 		purchasableServices = new ArrayList<String>();
 		charInv = new Inventory(6);
+	}
+	
+	public void movePlayer(int[] newLocation, Board board){
+		health[0] -= board.Board[newLocation[0]][newLocation[1]].getPlayerDamage(survivableTempRange);
+		amtMoves[0] -= Math.ceil(Math.sqrt(Math.pow(newLocation[0] - location[0], 2) + Math.pow(newLocation[1] - location[1], 2))) + board.Board[newLocation[0]][newLocation[1]].getPlayerMovementCost();
 	}
 
 }

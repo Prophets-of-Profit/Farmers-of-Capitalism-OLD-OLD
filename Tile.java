@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class Tile {
+public class Tile implements Serializable{
 	
 	public double soilQuality;
 	public double environmentQuality;
@@ -11,10 +12,8 @@ public class Tile {
 
 	public Tile(Biome biome) {
 		this.biome = biome;
-		//soilQuality and environmentQuality have minimum values of 5, but they can be better
 		this.soilQuality = 5 + Math.random() * 5;
 		this.environmentQuality = 5 + Math.random() * 5;
-		//The temperature will always be around the average temperature of the biome, but it can vary by + or - 0.25 of the average temperature
 		this.temperature = biome.avgTemperature + Math.random() * 0.50 * biome.avgTemperature - 0.25 * biome.avgTemperature;
 		this.plant = null;
 		this.improvement = null;
@@ -49,18 +48,22 @@ public class Tile {
 		return this.biome;
 	}
 	
-	public double getPlayerDamage(int[] tempRange){
+	public double getPlayerDamage(double[] tempRange){
 		double dmg = 0;
 		dmg += biome.additionalPlayerDamage;
 		if(improvement != null){
 			dmg += improvement.playerDamage;
 		}
-		//TODO add damage based on if temperature is not in temp range, and make it proportional to how far it is away from the temprange
+		if(temperature < tempRange[0]){
+			dmg += tempRange[0] - temperature;
+		}else if(temperature > tempRange[1]){
+			dmg += temperature - tempRange[1];
+		}
 		return dmg;
 	}
 	
 	public double getPlayerMovementCost(){
-		double moveCost = 1;
+		double moveCost = 0;
 		moveCost += biome.movementChange;
 		if(improvement != null){
 			moveCost += improvement.movementChange;

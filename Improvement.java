@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class Improvement {
+public class Improvement implements Serializable{
 	
 	public String name;
 	public double movementChange;
