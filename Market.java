@@ -3,6 +3,8 @@ import java.io.Serializable;
 
 public class Market implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+	
 	public Color[] preferredColorOrder = {Color.BLACK, Color.BLUE, Color.CYAN, Color.DARK_GRAY, Color.GRAY, Color.GREEN, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE, Color.YELLOW};
 	public String[] plantBiases = Plant.allPlantTypes.clone();
 	private double quality;

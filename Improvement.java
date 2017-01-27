@@ -1,6 +1,8 @@
 import java.io.Serializable;
 
 public class Improvement implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	
 	public String name;
 	public double movementChange;
@@ -53,6 +55,9 @@ public class Improvement implements Serializable{
 	public void main(Player stepper){}
 	
 	public class Road extends Improvement{
+		
+		private static final long serialVersionUID = 1L;
+
 		public Road(double moveChange) {
 			super(moveChange, 0);
 			Improvement.this.name = "road";
@@ -60,6 +65,9 @@ public class Improvement implements Serializable{
 	}
 	
 	public class Silo extends Improvement{
+		
+		private static final long serialVersionUID = 1L;
+
 		public Silo(int invSize){
 			super(new Inventory(invSize));
 			Improvement.this.name = "silo";
@@ -70,6 +78,9 @@ public class Improvement implements Serializable{
 	}
 	
 	public class Trap extends Improvement{
+		
+		private static final long serialVersionUID = 1L;
+
 		public Trap(double moveInhibit, double playerDmg){
 			super(moveInhibit, playerDmg);
 			Improvement.this.name = "none";
@@ -80,6 +91,9 @@ public class Improvement implements Serializable{
 	}
 	
 	public class IrrigationChannel extends Improvement{
+		
+		private static final long serialVersionUID = 1L;
+
 		public IrrigationChannel(int range, double howMuchHelped){
 			super("soil quality", range, howMuchHelped);
 			Improvement.this.movementChange = (int) -0.1 * howMuchHelped;
@@ -88,6 +102,9 @@ public class Improvement implements Serializable{
 	}
 	
 	public class Sprinkler extends Improvement{
+		
+		private static final long serialVersionUID = 1L;
+
 		public Sprinkler(int range, double howMuchHelped){
 			super("soil quality", range, howMuchHelped);
 			Improvement.this.name = "sprinkler";
@@ -95,6 +112,8 @@ public class Improvement implements Serializable{
 	}
 	
 	public class Tunnel extends Improvement{
+		
+		private static final long serialVersionUID = 1L;
 		
 		int[] locations = new int[4];
 		
@@ -113,6 +132,8 @@ public class Improvement implements Serializable{
 	
 	public class Teleporter extends Improvement{
 		
+		private static final long serialVersionUID = 1L;
+		
 		int[] locations = new int[4];
 		
 		public Teleporter(int[] firstLocation, int[] secondLocation){
@@ -129,6 +150,9 @@ public class Improvement implements Serializable{
 	}
 	
 	public class VotingMachine extends Improvement{
+		
+		private static final long serialVersionUID = 1L;
+
 		public VotingMachine(){
 			super();
 			Improvement.this.name = "voting machine";

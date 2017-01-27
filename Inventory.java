@@ -3,6 +3,8 @@ import java.util.ArrayList;
 
 public class Inventory implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+	
 	private ArrayList<Plant> seeds;
 	private ArrayList<Improvement> improvements;
 	public int maxSize;
