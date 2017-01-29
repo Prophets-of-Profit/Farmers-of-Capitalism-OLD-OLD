@@ -1,24 +1,43 @@
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileSystemView;
 import net.miginfocom.layout.AC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 
 public class NewGameSetup {
+	
+	@SuppressWarnings("serial")
+	public class ImageContainer extends JLabel{
+		
+		public ImageContainer(String fileDirectory, String description){
+			this.setIcon(new ImageIcon(fileDirectory, description));
+		}
+		
+		@Override
+	    public void paintComponent(Graphics g)
+	    {
+	        super.paintComponent(g);
+	        g.drawImage(((ImageIcon) this.getIcon()).getImage(), 0, 0, getWidth(), getHeight(), this);
+	    }
+		
+	}
 
 	private JFrame frame;
 	private Font defaultFont;
+	private ImageContainer image = new ImageContainer(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\My Games\\Farmers of Capitalism\\Images\\splash.jpg", "splash image - hills");
 
 	/**
 	 * Launch the application.
@@ -30,7 +49,7 @@ public class NewGameSetup {
 					NewGameSetup window = new NewGameSetup(mainGame);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					mainGame.log(e.getMessage());
 				}
 			}
 		});
@@ -43,10 +62,10 @@ public class NewGameSetup {
 		frame = new JFrame();
 		
 		frame.setTitle("Farmers of Capitalism - New Game");
-		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setWindowPosition(frame, 0);
 		frame.getContentPane().setLayout(new MigLayout(new LC(), new AC().grow(), new AC().grow()));
+		frame.setIconImage(((ImageIcon) image.getIcon()).getImage());
 		
 		JLabel question = new JLabel("How many players will embark on this adventure?");
 		question.setHorizontalAlignment(SwingConstants.CENTER);

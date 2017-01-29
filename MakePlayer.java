@@ -1,26 +1,44 @@
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
+import javax.swing.filechooser.FileSystemView;
 import net.miginfocom.layout.AC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 
 public class MakePlayer {
+	
+	@SuppressWarnings("serial")
+	public class ImageContainer extends JLabel{
+		
+		public ImageContainer(String fileDirectory, String description){
+			this.setIcon(new ImageIcon(fileDirectory, description));
+		}
+		
+		@Override
+	    public void paintComponent(Graphics g)
+	    {
+	        super.paintComponent(g);
+	        g.drawImage(((ImageIcon) this.getIcon()).getImage(), 0, 0, getWidth(), getHeight(), this);
+	    }
+		
+	}
 
 	private JFrame frame;
 	private Font defaultFont;
+	private ImageContainer image = new ImageContainer(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\My Games\\Farmers of Capitalism\\Images\\splash.jpg", "splash image - hills");
 
 	/**
 	 * Launch the application.
@@ -32,7 +50,7 @@ public class MakePlayer {
 					MakePlayer window = new MakePlayer(pNumber, mainActivity);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					mainActivity.log(e.getMessage());
 				}
 			}
 		});
@@ -54,6 +72,7 @@ public class MakePlayer {
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.getContentPane().setLayout(new MigLayout(new LC(), new AC().grow(), new AC().grow()));
 		frame.setTitle("Farmers of Capitalism: Player Creation - P" + (pNumber + 1));
+		frame.setIconImage(((ImageIcon) image.getIcon()).getImage());
 		
 		JLabel askName = new JLabel("Name for P" + (pNumber + 1));
 		askName.setHorizontalAlignment(SwingConstants.CENTER);

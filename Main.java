@@ -1,6 +1,10 @@
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -47,7 +51,30 @@ public class Main implements Serializable{
 	}
 
 	public static void main(String[] args) throws InterruptedException{
-		game = new Main(args); //TODO find out if they want to use a saved game or to start a new game, and make strings for that, and then pass that on as the argument to main for main to log
+		InitGame.main(args);
+		while(InitGame.gameAction.equals("none")){
+			Thread.sleep(15);
+		}
+		args = InitGame.logs;
+		if(InitGame.gameAction.equals("new game")){
+			InitGame.window.die();
+			game = new Main(args);
+		}else{
+			try{
+				FileInputStream fileIn = new FileInputStream(InitGame.gameAction);
+		        ObjectInputStream in = new ObjectInputStream(fileIn);
+		        game = (Main) in.readObject();
+		        in.close();
+		        fileIn.close();
+		        for(int i = 0; i < args.length; i++){
+		        	game.log(args[i]);
+		        }
+		        game.log("Deserialized and successfully loaded game");
+			}catch (Exception e){
+				System.out.println(e.getMessage());
+			}
+			InitGame.window.die();
+		}
 	}
 	
 	public void log(String messageToLog){
@@ -66,6 +93,25 @@ public class Main implements Serializable{
 		}catch(Exception e){
 			System.out.println(e.getMessage());
 		}
+	}
+
+	public void save(){
+		log("Saving game");
+		try{
+			FileOutputStream fileOut = new FileOutputStream(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\My Games\\Farmers of Capitalism\\Saves\\gameOf[" + startTime + "].ser");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	        out.writeObject(this);
+	        log("Successfully and gracefully saved game");
+	        out.writeObject(this);
+	        out.close();
+	        fileOut.close();
+		}catch (Exception e){
+			log(e.getMessage());
+		}
+	}
+	
+	public void writeGameToSocket(){
+		//TODO
 	}
 
 }

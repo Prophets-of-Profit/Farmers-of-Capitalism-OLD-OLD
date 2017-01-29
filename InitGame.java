@@ -3,16 +3,37 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileSystemView;
 import net.miginfocom.layout.AC;
+import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 
-public class MainDisplay {
-
+public class InitGame {
+	
+	@SuppressWarnings("serial")
+	public class LayerController extends JLayeredPane{
+		
+		public LayerController(){
+			super();
+		}
+		
+		@Override
+		public boolean isOptimizedDrawingEnabled(){
+			return false;
+		}
+	}
+	
 	@SuppressWarnings("serial")
 	public class ImageContainer extends JLabel{
 		
@@ -28,49 +49,103 @@ public class MainDisplay {
 	    }
 		
 	}
+	
+	public static String gameAction = "none";
+	public static String[] logs;
+	public static InitGame window;
 
 	private JFrame frame;
 	private Font defaultFont;
 	private ImageContainer image = new ImageContainer(FileSystemView.getFileSystemView().getDefaultDirectory().getPath() + "\\My Games\\Farmers of Capitalism\\Images\\splash.jpg", "splash image - hills");
 
-
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static String[] main(String[] args) throws InterruptedException{
+		String[] toLog = new String[args.length + 2];
+		for(int i = 0; i < args.length; i++){
+			toLog[i] = args[i];
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainDisplay window = new MainDisplay();
+					toLog[args.length] = "Initializing Splash Screen";
+					window = new InitGame(toLog);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					toLog[args.length] = e.getMessage();
 				}
 			}
 		});
+		return toLog;
 	}
 
 	/**
 	 * Create the application.
 	 */
-	public MainDisplay() {
-		initialize();
+	public InitGame(String[] args) throws InterruptedException{
+		initialize(args);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(String[] args) throws InterruptedException{
 		frame = new JFrame();
 		setWindowPosition(frame, 0);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.getContentPane().setLayout(new MigLayout(new LC(), new AC().grow(), new AC().grow()));
-		frame.setTitle("Farmers of Capitalism");
+		frame.setTitle("Farmers Of Capitalism");
 		frame.setIconImage(((ImageIcon) image.getIcon()).getImage());
 		
-		JLabel hello = new JLabel("hello");
-		hello.setFont(defaultFont);
-		frame.add(hello);
+		JPanel main = new JPanel(new MigLayout(new LC(), new AC().grow(), new AC().grow()));
+		JPanel buttons = new JPanel(new MigLayout(new LC(), new AC().grow(), new AC().grow()));
+		LayerController layer = new LayerController();
+		layer.setLayout(new MigLayout());
+		layer.add(main, new CC().width("100%").height("100%"), new Integer(1));
+		layer.add(buttons, new CC().pos("80%", "80%"), new Integer(0));
+		frame.add(layer, "grow");
+		
+		image.setFont(defaultFont);
+		image.setHorizontalAlignment(SwingConstants.CENTER);
+		main.add(image, "grow");
+		
+		JButton newGame = new JButton("New Game");
+		newGame.setHorizontalAlignment(SwingConstants.CENTER);
+		newGame.setFont(defaultFont);
+		newGame.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				args[args.length - 1] = "User selected new game";
+				logs = args;
+				gameAction = "new game";
+			}
+		});
+		buttons.add(newGame, "growx, wrap");
+		
+		JButton cont = new JButton("Continue");
+		cont.setHorizontalAlignment(SwingConstants.CENTER);
+		cont.setFont(defaultFont);
+		cont.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				//TODO user selects game save
+				args[args.length - 1] = "User selected to continue game at "; //TODO + directoryName;
+				logs = args;
+				gameAction = ""; // TODO make it directory
+			}
+		});
+		buttons.add(cont, "growx, wrap");
+		
+		/**
+		 *
+		frame.getRootPane().setDefaultButton(newGame);
+		newGame.requestFocus();
+		Thread.sleep(30);
+		 * 
+		 */
+		frame.getRootPane().setDefaultButton(cont);
+		cont.requestFocusInWindow();
 	}
 	
 	private void setWindowPosition(JFrame window, int screen){        
@@ -94,6 +169,10 @@ public class MainDisplay {
 	    defaultFont = new Font("Roman Baseline", Font.ROMAN_BASELINE, screenX / 75);
 
 	    window.setLocation(windowPosX, windowPosY);
+	}
+	
+	public void die(){
+		frame.dispose();
 	}
 
 }
