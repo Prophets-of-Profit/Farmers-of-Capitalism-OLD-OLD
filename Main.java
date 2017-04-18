@@ -16,12 +16,16 @@ public class Main implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	public static Main game;
+	public static int turnLimit = 500;
+	public static int boardSize = 500;
 	
-	public Board mainBoard = new Board(500);
+	public Board mainBoard = new Board(boardSize);
 	public String mode = "multi-device || local";
 	public int numPlayers = 0;
 	public Player[] players = null;
 	public String startTime;
+	public int turnCount = 0;
+	public boolean allowMove = false;
 	
 	public Main(String[] args) throws InterruptedException{
 		startTime = new SimpleDateFormat("dd,MM,yy;HH,mm,ss").format(Calendar.getInstance().getTime());
@@ -46,7 +50,9 @@ public class Main implements Serializable{
 				}
 				log("Player " + (i + 1) + " has chosen the name \"" + players[i].playerName + "\"");
 			}
-		
+			allowMove = true;
+		}else if(mode.equals("multi-device")){
+			//TODO
 		}
 	}
 
@@ -74,6 +80,17 @@ public class Main implements Serializable{
 				System.out.println(e.getMessage());
 			}
 			InitGame.window.die();
+		}
+		//Send up GUI
+		while(game.turnCount < turnLimit){
+			if(game.allowMove){
+				//TODO
+				if(game.mode.equals("multi-device")){
+					//TODO send game object over socket
+				}
+			}else if(game.mode.equals("multi-device")){
+				//TODO receive game object over socket and display changes
+			}
 		}
 	}
 	

@@ -5,6 +5,8 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -97,55 +99,65 @@ public class InitGame {
 		frame.getContentPane().setLayout(new MigLayout(new LC(), new AC().grow(), new AC().grow()));
 		frame.setTitle("Farmers Of Capitalism");
 		frame.setIconImage(((ImageIcon) image.getIcon()).getImage());
-		
-		JPanel main = new JPanel(new MigLayout(new LC(), new AC().grow(), new AC().grow()));
-		JPanel buttons = new JPanel(new MigLayout(new LC(), new AC().grow(), new AC().grow()));
-		LayerController layer = new LayerController();
-		layer.setLayout(new MigLayout());
-		layer.add(main, new CC().width("100%").height("100%"), new Integer(1));
-		layer.add(buttons, new CC().pos("80%", "80%"), new Integer(0));
-		frame.add(layer, "grow");
-		
-		image.setFont(defaultFont);
-		image.setHorizontalAlignment(SwingConstants.CENTER);
-		main.add(image, "grow");
-		
-		JButton newGame = new JButton("New Game");
-		newGame.setHorizontalAlignment(SwingConstants.CENTER);
-		newGame.setFont(defaultFont);
-		newGame.addActionListener(new ActionListener(){
+		frame.addComponentListener(new ComponentListener(){
+
 			@Override
-			public void actionPerformed(ActionEvent e){
-				args[args.length - 1] = "User selected new game";
-				logs = args;
-				gameAction = "new game";
+			public void componentResized(ComponentEvent e) {
+				frame.getContentPane().removeAll();
+				JPanel main = new JPanel(new MigLayout(new LC(), new AC().grow(), new AC().grow()));
+				JPanel buttons = new JPanel(new MigLayout(new LC(), new AC().grow(), new AC().grow()));
+				buttons.setOpaque(false);
+				LayerController layer = new LayerController();
+				layer.setLayout(new MigLayout());
+				layer.add(main, new CC().width("100%").height("100%"), new Integer(1));
+				layer.add(buttons, new CC().pos("80%", "80%"), new Integer(0));
+				frame.add(layer, "grow");
+				
+				image.setFont(defaultFont);
+				image.setHorizontalAlignment(SwingConstants.CENTER);
+				main.add(image, "grow");
+				
+				JButton newGame = new JButton("New Game");
+				newGame.setHorizontalAlignment(SwingConstants.CENTER);
+				newGame.setFont(defaultFont);
+				newGame.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent e){
+						args[args.length - 1] = "User selected new game";
+						logs = args;
+						gameAction = "new game";
+					}
+				});
+				buttons.add(newGame, "growx, wrap");
+				
+				JButton cont = new JButton("Continue");
+				cont.setHorizontalAlignment(SwingConstants.CENTER);
+				cont.setFont(defaultFont);
+				cont.addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent e){
+						//TODO user selects game save
+						args[args.length - 1] = "User selected to continue game at "; //TODO + directoryName;
+						logs = args;
+						gameAction = ""; // TODO make it directory
+					}
+				});
+				buttons.add(cont, "growx, wrap");
+				frame.repaint();
+				frame.revalidate();
 			}
-		});
-		buttons.add(newGame, "growx, wrap");
-		
-		JButton cont = new JButton("Continue");
-		cont.setHorizontalAlignment(SwingConstants.CENTER);
-		cont.setFont(defaultFont);
-		cont.addActionListener(new ActionListener(){
+
 			@Override
-			public void actionPerformed(ActionEvent e){
-				//TODO user selects game save
-				args[args.length - 1] = "User selected to continue game at "; //TODO + directoryName;
-				logs = args;
-				gameAction = ""; // TODO make it directory
-			}
+			public void componentMoved(ComponentEvent e) {}
+
+			@Override
+			public void componentShown(ComponentEvent e) {}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {}
+			
 		});
-		buttons.add(cont, "growx, wrap");
 		
-		/**
-		 *
-		frame.getRootPane().setDefaultButton(newGame);
-		newGame.requestFocus();
-		Thread.sleep(30);
-		 * 
-		 */
-		frame.getRootPane().setDefaultButton(cont);
-		cont.requestFocusInWindow();
 	}
 	
 	private void setWindowPosition(JFrame window, int screen){        
